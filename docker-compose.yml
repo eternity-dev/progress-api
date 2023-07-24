@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  app:
+    container_name: app_progress
+    restart: always
+    working_dir: /app
+    build:
+      context: .
+      dockerfile: dockerfile
+    env_file:
+      - .env
+    networks:
+      - progress
+    ports:
+      - 3000:3000
+      - 8000:8000
+    volumes:
+      - .:/app
+  dev-db:
+    image: postgres:latest
+    container_name: dev_db_progress
+    restart: always
+    environment:
+      - POSTGRES_USER=progress
+      - POSTGRES_PASSWORD=progressapi2023
+      - POSTGRES_DB=progress
+    networks:
+      - progress
+    ports:
+      - 5430:5432
+  test-db:
+    image: postgres:latest
+    container_name: test_db_progress
+    restart: always
+    environment:
+      - POSTGRES_USER=progress
+      - POSTGRES_PASS=progressapi2023
+      - POSTGRES_DB=progress_test
+    networks:
+      - progress
+    ports:
+      - 5431:5432
+networks:
+  progress:
