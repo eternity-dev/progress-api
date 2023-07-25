@@ -2,39 +2,35 @@ version: '3.8'
 services:
   app:
     container_name: app
-    restart: always
-    working_dir: /app
     build:
       context: .
-      dockerfile: dockerfile
+      dockerfile: ./docker/app.dockerfile
     env_file:
-      - .env
-    networks:
-      - progress
+      - ./config/.env
     ports:
       - 3000:3000
-      - 8000:8000
     volumes:
-      - .:/app
-  dev-db:
-    image: postgres:latest
-    container_name: dev_db
+      - app-data:/var/app/app-data
+  postgres-dev:
+    container_name: postgres-dev
+    build:
+      context: .
+      dockerfile: ./docker/postgres.dev.dockerfile
     restart: always
-    env_file:
-      - .env
-    networks:
-      - progress
     ports:
-      - 5430:5432
-  test-db:
-    image: postgres:latest
-    container_name: test_db
+      - 5410:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/dev-data
+  postgres-test:
+    container_name: postgres-test
+    build:
+      context: .
+      dockerfile: ./docker/postgres.test.dockerfile
     restart: always
-    env_file:
-      - .env.test
-    networks:
-      - progress
     ports:
-      - 5431:5432
-networks:
-  progress:
+      - 5420:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/test-data
+volumes:
+  app-data:
+  postgres-data:

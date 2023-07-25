@@ -1,0 +1,5 @@
+FROM postgres:latest
+
+ENV POSTGRES_USER=root
+ENV POSTGRES_PASSWORD=root1234
+ENV POSTGRES_DB=progress_test
